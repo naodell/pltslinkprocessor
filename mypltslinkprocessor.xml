@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xc:Partition xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:xc="http://xdaq.web.cern.ch/xdaq/xsd/2004/XMLConfiguration-30" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <xc:Context url="http://srv-s2d16-29-01.cms:9230">
+
+        <xc:Endpoint protocol="utcp" service="b2in" rmode="select" hostname="srv-s2d16-29-01.cms" port="9231" network="utcp1" sndTimeout="2000" rcvTimeout="2000" affinity="RCV:P,SND:W,DSR:W,DSS:W" singleThread="true" publish="true"/>
+
+        <xc:Application class="pt::utcp::Application" id="12" instance="0" network="local">
+            <properties xmlns="urn:xdaq-application:pt::utcp::Application" xsi:type="soapenc:Struct">
+                <maxClients xsi:type        = "xsd:unsignedInt">50</maxClients>
+                <autoConnect xsi:type       = "xsd:boolean">false</autoConnect>
+                <ioQueueSize xsi:type       = "xsd:unsignedInt">65536</ioQueueSize>
+                <eventQueueSize xsi:type    = "xsd:unsignedInt">65536</eventQueueSize>
+                <maxReceiveBuffers xsi:type = "xsd:unsignedInt">266</maxReceiveBuffers>
+                <maxBlockSize xsi:type      = "xsd:unsignedInt">65536</maxBlockSize>
+                <committedPoolSize xsi:type = "xsd:double">0x17580000</committedPoolSize>
+            </properties>
+        </xc:Application>
+        <xc:Module>${XDAQ_ROOT}/lib/libtcpla.so</xc:Module>
+        <xc:Module>${XDAQ_ROOT}/lib/libptutcp.so</xc:Module>
+
+        <xc:Application class="eventing::core::Publisher" id="19" instance="0" network="utcp1" group="b2in" service="eventing-publisher" bus="brildata">
+            <properties xmlns="urn:xdaq-application:eventing::core::Publisher" xsi:type="soapenc:Struct">
+                <eventings xsi:type="soapenc:Array" soapenc:arrayType="xsd:ur-type[1]">
+                    <item xsi:type="xsd:string" soapenc:position="[0]">utcp://srv-s2d16-32-01.cms:8181</item>
+                </eventings>
+            </properties>
+        </xc:Application>
+
+        <!--xc:Application class="eventing::core::Publisher" id="19" instance="0" network="utcp1" group="b2in" service="eventing-publisher" bus="plt">
+            <properties xmlns="urn:xdaq-application:eventing::core::Publisher" xsi:type="soapenc:Struct">
+                <eventings xsi:type="soapenc:Array" soapenc:arrayType="xsd:ur-type[2]">
+                          <item xsi:type="xsd:string" soapenc:position="[0]">utcp://srv-s2d16-18-01.cms:8181</item>
+                          <item xsi:type="xsd:string" soapenc:position="[1]">utcp://srv-s2d16-27-01.cms:8181</item>
+                 </eventings>
+                <eventings xsi:type="soapenc:Array" soapenc:arrayType="xsd:ur-type[1]">
+                    <item xsi:type="xsd:string" soapenc:position="[0]">utcp://srv-s2d16-29-01.cms:30050</item>
+                </eventings>
+            </properties>
+        </xc:Application-->
+        <xc:Module>${XDAQ_ROOT}/lib/libb2inutils.so</xc:Module>
+        <xc:Module>${XDAQ_ROOT}/lib/libeventingcore.so</xc:Module>
+
+        <xc:Application class="bril::pltslinkprocessor::Application" id="11" instance="0" network="local" service="pltslinkprocessor" logpolicy="inherit">
+            <properties xmlns="urn:xdaq-application:bril::pltslinkprocessor::Application" xsi:type="soapenc:Struct">
+                <bus xsi:type="xsd:string">plt</bus>
+                <workloopHost xsi:type="xsd:string">tcp://vmepc-s2d16-07-01.cms:5556</workloopHost>
+                <slinkHost xsi:type="xsd:string">tcp://pltslink.cms:7776</slinkHost>
+            </properties>
+        </xc:Application>
+        <xc:Module>${XDAQ_ROOT}/lib/libeventingapi.so</xc:Module>
+        <!--<xc:Module>/brilpro/plt/daq/bril/pltslinkprocessor/lib/linux/x86_64_slc6/libbrilpltslinkprocessor.so</xc:Module>-->
+        <xc:Module>${HOME}/plt/daq/bril/pltslinkprocessor/lib/linux/x86_64_slc6/libbrilpltslinkprocessor.so</xc:Module>
+
+        <xc:Application class="xmem::probe::Application" id="21" instance="0" network="local" >
+        </xc:Application>
+        <xc:Module>${XDAQ_ROOT}/lib/libxmemprobe.so</xc:Module>    
+
+    </xc:Context>
+
+</xc:Partition>
